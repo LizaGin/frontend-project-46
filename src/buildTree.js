@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
 export const OPERATIONS = {
-  CREATE: 'CREATE',
-  DELETE: 'DELETE',
-  UPDATE: 'UPDATE',
+  CREATE: 'ADDED',
+  DELETE: 'REMOVED',
+  UPDATE: 'CHANGED',
   UNCHANGED: 'UNCHANGED',
-  NESTED: 'NESTED',
+  NESTED: 'PARENT',
 };
 
 const buildTree = (obj1, obj2) => {
@@ -18,24 +18,24 @@ const buildTree = (obj1, obj2) => {
     const newValue = obj2[key];
 
     if (_.isObject(value) && _.isObject(newValue)) {
-      return { key, type: OPERATIONS.NESTED, children: buildTree(value, newValue) };
+      return { name: key, type: OPERATIONS.NESTED, children: buildTree(value, newValue) };
     }
     if (key in obj1 && !(key in obj2)) {
-      return { key, type: OPERATIONS.DELETE, value };
+      return { name: key, type: OPERATIONS.DELETE, value };
     }
     if (!(key in obj1) && key in obj2) {
-      return { key, type: OPERATIONS.CREATE, newValue };
+      return { name: key, type: OPERATIONS.CREATE, value: newValue };
     }
     if (value !== newValue) {
       return {
-        key,
+        name: key,
         type: OPERATIONS.UPDATE,
-        value,
+        oldValue: value,
         newValue,
       };
     }
 
-    return { key, type: OPERATIONS.UNCHANGED, value };
+    return { name: key, type: OPERATIONS.UNCHANGED, value };
   });
 
   return tree;

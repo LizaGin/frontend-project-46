@@ -1,31 +1,36 @@
 import _ from 'lodash';
 import { OPERATIONS } from '../buildTree.js';
 
-const normalize = (value) => (_.isObject(value) ? '[complex value]' : value);
+const normalize = (value) => {
+  if (_.isObject(value)) return '[complex value]';
+  if (typeof value === 'string') return `'${value}'`;
+  return value;
+};
 
 const plain = (tree, path = '') => {
-  const lines = tree.flatMap((data) => {
-    const {
-      type, key, value, newValue, children,
-    } = data;
+  const lines = tree
+    .flatMap((data) => {
+      const { type, name, oldValue, value, newValue, children } = data;
 
-    switch (type) {
-      case OPERATIONS.NESTED: {
-        return plain(children, `${path}${key}.`);
+      switch (type) {
+        case OPERATIONS.NESTED: {
+          return plain(children, `${path}${name}.`);
+        }
+        case OPERATIONS.CREATE: {
+          return `Property '${path}${name}' was added with value: ${normalize(value)}`;
+        }
+        case OPERATIONS.DELETE: {
+          return `Property '${path}${name}' was removed`;
+        }
+        case OPERATIONS.UPDATE: {
+          return `Property '${path}${name}' was updated. From ${normalize(oldValue)} to ${normalize(newValue)}`;
+        }
+        case OPERATIONS.UNCHANGED:
+        default:
+          return [];
       }
-      case OPERATIONS.CREATE: {
-        return `Property '${path}${key}' was added with value: ${normalize(newValue)}`;
-      }
-      case OPERATIONS.DELETE: {
-        return `Property '${path}${key}' was removed`;
-      }
-      case OPERATIONS.UPDATE: {
-        return `Property '${path}${key}' was updated. From ${normalize(value)} to ${normalize(newValue)}`;
-      }
-      default:
-        return '';
-    }
-  });
+    })
+    .filter(Boolean);
   return lines.join('\n');
 };
 

@@ -7,6 +7,7 @@ function genDiff(filePath1, filePath2, formatName = 'stylish') {
   const tree = buildTree(parseFile1, parseFile2);
   const strDiff = format(tree, formatName);
 
+  console.log(strDiff);
   return strDiff;
 }
 
