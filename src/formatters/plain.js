@@ -10,7 +10,9 @@ const normalize = (value) => {
 const plain = (tree, path = '') => {
   const lines = tree
     .flatMap((data) => {
-      const { type, name, oldValue, value, newValue, children } = data;
+      const {
+        type, name, oldValue, value, newValue, children,
+      } = data;
 
       switch (type) {
         case OPERATIONS.NESTED: {

@@ -14,7 +14,9 @@ const stringify = (data, depth) => {
 
 const stylish = (tree, depth = 1) => {
   const lines = tree.map((data) => {
-    const { type, name, oldValue, value, newValue, children } = data;
+    const {
+      type, name, oldValue, value, newValue, children,
+    } = data;
 
     switch (type) {
       case OPERATIONS.NESTED: {

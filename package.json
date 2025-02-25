@@ -6,7 +6,7 @@
   },
   "type": "module",
   "description": "difference calculator",
-  "main": "formater/index.js",
+  "main": "./src/formatters/index.js",
   "scripts": {
     "test": "jest"
   },
@@ -28,9 +28,10 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "eslint": "^8.27.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^28.11.0",
     "jest": "^29.7.0"
   }
 }
